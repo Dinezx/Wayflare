@@ -3,6 +3,7 @@ import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import {
   addDoc,
   collection,
+  deleteDoc,
   onSnapshot,
   orderBy,
   query,
@@ -33,6 +34,9 @@ export default function App() {
   const [loading, setLoading] = React.useState(false);
   const [activeView, setActiveView] = React.useState("dashboard");
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [trafficFilter, setTrafficFilter] = React.useState("all");
+  const [riskFilter, setRiskFilter] = React.useState("all");
   const [analytics, setAnalytics] = React.useState({
     delayTrend: { labels: [], values: [] },
     deliveryPerformance: { labels: [], onTime: [], delayed: [] },
@@ -119,6 +123,27 @@ export default function App() {
     }
   };
 
+  const handleDeleteShipment = async (shipmentId) => {
+    if (!window.confirm("Delete this shipment?")) {
+      return;
+    }
+    await deleteDoc(doc(db, "shipments", shipmentId));
+  };
+
+  const normalizedQuery = searchTerm.trim().toLowerCase();
+  const filteredShipments = shipments.filter((item) => {
+    const matchesSearch = !normalizedQuery
+      || [item.shipment_id, item.origin, item.destination]
+        .filter(Boolean)
+        .some((value) => String(value).toLowerCase().includes(normalizedQuery));
+    const matchesTraffic = trafficFilter === "all" || item.traffic_level === trafficFilter;
+    const riskValue = Number(item.delay_risk || 0);
+    const matchesRisk = riskFilter === "all"
+      || (riskFilter === "high" && riskValue > 0.6)
+      || (riskFilter === "low" && riskValue <= 0.6);
+    return matchesSearch && matchesTraffic && matchesRisk;
+  });
+
   const highRiskShipments = shipments.filter((item) => (item.delay_risk || 0) > 0.6);
 
   return (
@@ -153,6 +178,8 @@ export default function App() {
             <input
               className="w-72 bg-transparent text-sm text-slate-700 focus:outline-none"
               placeholder="Search shipments, routes, or IDs..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
             />
           </div>
           <div className="flex items-center gap-4">
@@ -237,6 +264,33 @@ export default function App() {
                   <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-semibold text-slate-900">All Shipments</h1>
                   </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500">
+                      <span className="material-symbols-rounded text-base">filter_list</span>
+                      <select
+                        className="bg-transparent text-xs text-slate-600 focus:outline-none"
+                        value={trafficFilter}
+                        onChange={(event) => setTrafficFilter(event.target.value)}
+                      >
+                        <option value="all">All Traffic</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500">
+                      <span className="material-symbols-rounded text-base">warning</span>
+                      <select
+                        className="bg-transparent text-xs text-slate-600 focus:outline-none"
+                        value={riskFilter}
+                        onChange={(event) => setRiskFilter(event.target.value)}
+                      >
+                        <option value="all">All Risk</option>
+                        <option value="high">High Risk</option>
+                        <option value="low">Low Risk</option>
+                      </select>
+                    </div>
+                  </div>
                   <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm">
@@ -246,10 +300,11 @@ export default function App() {
                             <th className="px-3 py-2">Origin to Destination</th>
                             <th className="px-3 py-2">Traffic / Weather</th>
                             <th className="px-3 py-2">Delay Risk</th>
+                            <th className="px-3 py-2">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                          {shipments.map((item) => (
+                          {filteredShipments.map((item) => (
                             <tr key={item.id}>
                               <td className="px-3 py-3 text-sm font-semibold text-blue-600">
                                 {item.shipment_id}
@@ -264,11 +319,24 @@ export default function App() {
                               <td className="px-3 py-3 text-sm font-semibold text-slate-700">
                                 {Math.round((item.delay_risk || 0) * 100)}%
                               </td>
+                              <td className="px-3 py-3">
+                                <button
+                                  className="text-xs font-semibold text-red-500 hover:text-red-600"
+                                  onClick={() => handleDeleteShipment(item.id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
+                    {filteredShipments.length === 0 && (
+                      <p className="px-3 py-6 text-center text-sm text-slate-500">
+                        No shipments match your filters.
+                      </p>
+                    )}
                   </div>
                 </section>
               )}

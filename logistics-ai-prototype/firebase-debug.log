@@ -1,0 +1,72 @@
+[debug] [2026-03-14T15:18:19.562Z] ----------------------------------------------------------------------
+[debug] [2026-03-14T15:18:19.566Z] Command:       C:\nvm4w\nodejs\node.exe C:\Users\ELCOT\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions,hosting --project wayflare-ai --debug
+[debug] [2026-03-14T15:18:19.567Z] CLI Version:   15.10.0
+[debug] [2026-03-14T15:18:19.567Z] Platform:      win32
+[debug] [2026-03-14T15:18:19.567Z] Node Version:  v24.13.0
+[debug] [2026-03-14T15:18:19.567Z] Time:          Sat Mar 14 2026 20:48:19 GMT+0530 (India Standard Time)
+[debug] [2026-03-14T15:18:19.567Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-14T15:18:21.649Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-14T15:18:21.650Z] > authorizing via signed-in user (dineshkumarsaj@gmail.com)
+[debug] [2026-03-14T15:18:21.650Z] [iam] checking project wayflare-ai for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-14T15:18:21.652Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:21.653Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:21.654Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai:testIamPermissions [none]
+[debug] [2026-03-14T15:18:21.654Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai:testIamPermissions  x-goog-user-project=wayflare-ai
+[debug] [2026-03-14T15:18:21.655Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-14T15:18:23.193Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai:testIamPermissions 200
+[debug] [2026-03-14T15:18:23.197Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-03-14T15:18:23.199Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:23.200Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:23.202Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/wayflare-ai/serviceAccounts/wayflare-ai@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-03-14T15:18:23.203Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/wayflare-ai/serviceAccounts/wayflare-ai@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-14T15:18:25.110Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/wayflare-ai/serviceAccounts/wayflare-ai@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-03-14T15:18:25.111Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/wayflare-ai/serviceAccounts/wayflare-ai@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-14T15:18:25.112Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:25.112Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:25.113Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wayflare-ai [none]
+[debug] [2026-03-14T15:18:25.827Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wayflare-ai 200
+[debug] [2026-03-14T15:18:25.827Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wayflare-ai {"projectId":"wayflare-ai","projectNumber":"601213035919","displayName":"Wayflare-Ai","name":"projects/wayflare-ai","resources":{"hostingSite":"wayflare-ai"},"state":"ACTIVE","etag":"1_f77790cd-76b3-4b78-82f1-8939606fa930"}
+[info] 
+[info] === Deploying to 'wayflare-ai'...
+[info] 
+[info] i  deploying functions, hosting 
+[debug] [2026-03-14T15:18:25.835Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:25.835Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:25.835Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai [none]
+[debug] [2026-03-14T15:18:26.248Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai 200
+[debug] [2026-03-14T15:18:26.248Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/wayflare-ai {"projectNumber":"601213035919","projectId":"wayflare-ai","lifecycleState":"ACTIVE","name":"Wayflare-Ai","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-03-14T04:59:41.657229Z","parent":{"type":"organization","id":"525815779493"}}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2026-03-14T15:18:26.252Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:26.253Z] Checked if tokens are valid: true, expires at: 1773504603268
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2026-03-14T15:18:26.254Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:26.255Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:26.256Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com [none]
+[debug] [2026-03-14T15:18:26.256Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com  x-goog-user-project=wayflare-ai
+[debug] [2026-03-14T15:18:26.258Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com [none]
+[debug] [2026-03-14T15:18:26.259Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com  x-goog-user-project=wayflare-ai
+[debug] [2026-03-14T15:18:28.081Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com 200
+[debug] [2026-03-14T15:18:28.081Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com [omitted]
+[warn] !  functions: missing required API cloudbuild.googleapis.com. Enabling now... 
+[debug] [2026-03-14T15:18:28.083Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:28.083Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:28.083Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com:enable [none]
+[debug] [2026-03-14T15:18:28.084Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com:enable  x-goog-user-project=wayflare-ai
+[debug] [2026-03-14T15:18:28.145Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com 200
+[debug] [2026-03-14T15:18:28.146Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com [omitted]
+[warn] !  artifactregistry: missing required API artifactregistry.googleapis.com. Enabling now... 
+[debug] [2026-03-14T15:18:28.147Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:28.147Z] Checked if tokens are valid: true, expires at: 1773504603268
+[debug] [2026-03-14T15:18:28.148Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com:enable [none]
+[debug] [2026-03-14T15:18:28.148Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com:enable  x-goog-user-project=wayflare-ai
+[debug] [2026-03-14T15:18:28.596Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com:enable 400
+[debug] [2026-03-14T15:18:28.599Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/cloudbuild.googleapis.com:enable [omitted]
+[debug] [2026-03-14T15:18:28.653Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com:enable 400
+[debug] [2026-03-14T15:18:28.658Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/wayflare-ai/services/artifactregistry.googleapis.com:enable [omitted]
+[error] 
+[error] Error: Your project wayflare-ai must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
+
+https://console.firebase.google.com/project/wayflare-ai/usage/details

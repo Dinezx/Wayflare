@@ -16,6 +16,7 @@ const initialState = {
 
 export default function ShipmentForm({ onSubmit, disabled }) {
   const [form, setForm] = useState(initialState);
+  const [errors, setErrors] = useState({});
 
   const updateField = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -23,6 +24,18 @@ export default function ShipmentForm({ onSubmit, disabled }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const nextErrors = {};
+    if (!form.distance || Number(form.distance) <= 0) {
+      nextErrors.distance = "Distance must be greater than 0.";
+    }
+    if (!form.estimated_delivery_time || Number(form.estimated_delivery_time) <= 0) {
+      nextErrors.estimated_delivery_time = "Delivery time must be greater than 0.";
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
     onSubmit({
       ...form,
       distance: Number(form.distance),
@@ -76,6 +89,9 @@ export default function ShipmentForm({ onSubmit, disabled }) {
             onChange={(e) => updateField("distance", e.target.value)}
             required
           />
+          {errors.distance && (
+            <p className="mt-1 text-xs text-red-500">{errors.distance}</p>
+          )}
         </div>
         <div>
           <label className="text-xs font-semibold text-slate-500">Traffic Level</label>
@@ -112,6 +128,9 @@ export default function ShipmentForm({ onSubmit, disabled }) {
             onChange={(e) => updateField("estimated_delivery_time", e.target.value)}
             required
           />
+          {errors.estimated_delivery_time && (
+            <p className="mt-1 text-xs text-red-500">{errors.estimated_delivery_time}</p>
+          )}
         </div>
         <div>
           <label className="text-xs font-semibold text-slate-500">Origin Lat (optional)</label>

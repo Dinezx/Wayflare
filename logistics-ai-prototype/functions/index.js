@@ -1,4 +1,5 @@
 const { onRequest } = require("firebase-functions/v2/https");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 const express = require("express");
@@ -117,11 +118,63 @@ const exportToBigQuery = async (payload) => {
     weather_condition: payload.weather_condition,
     estimated_delivery_time: payload.estimated_delivery_time,
     delay_risk: payload.delay_risk,
-    created_at: new Date().toISOString()
+    created_at: payload.created_at || new Date().toISOString()
   };
 
   await bigquery.dataset(datasetId).table(tableId).insert([row]);
   return { inserted: true };
+};
+
+const getPendingShipments = async (limit) => {
+  const snapshot = await db
+    .collection("shipments")
+    .where("bq_exported", "!=", true)
+    .orderBy("bq_exported")
+    .orderBy("created_at", "desc")
+    .limit(limit)
+    .get();
+
+  return snapshot.docs.map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data()
+  }));
+};
+
+const syncPendingShipments = async () => {
+  const limit = Number(process.env.BQ_SYNC_LIMIT || 50);
+  const pending = await getPendingShipments(limit);
+  if (pending.length === 0) {
+    return { synced: 0 };
+  }
+
+  const rows = pending.map((item) => ({
+    shipment_id: item.shipment_id,
+    origin: item.origin,
+    destination: item.destination,
+    distance: item.distance,
+    traffic_level: item.traffic_level,
+    weather_condition: item.weather_condition,
+    estimated_delivery_time: item.estimated_delivery_time,
+    delay_risk: item.delay_risk || 0,
+    created_at: item.created_at ? item.created_at.toDate().toISOString() : new Date().toISOString()
+  }));
+
+  const datasetId = process.env.BQ_DATASET;
+  const tableId = process.env.BQ_TABLE;
+  if (!datasetId || !tableId) {
+    return { synced: 0, skipped: true, reason: "Missing dataset/table" };
+  }
+
+  await bigquery.dataset(datasetId).table(tableId).insert(rows);
+
+  const batch = db.batch();
+  pending.forEach((item) => {
+    const ref = db.collection("shipments").doc(item.id);
+    batch.update(ref, { bq_exported: true });
+  });
+  await batch.commit();
+
+  return { synced: pending.length };
 };
 
 const buildSummaryFromFirestore = async () => {
@@ -381,6 +434,16 @@ app.post("/api/analytics/export", async (req, res) => {
   }
 });
 
+app.post("/api/analytics/sync", async (req, res) => {
+  try {
+    const result = await syncPendingShipments();
+    res.json({ ok: true, result });
+  } catch (error) {
+    logger.error("BigQuery sync failed", error);
+    res.status(500).json({ error: "BigQuery sync failed" });
+  }
+});
+
 app.get("/api/analytics/summary", async (req, res) => {
   try {
     let summary = null;
@@ -402,3 +465,12 @@ app.get("/api/analytics/summary", async (req, res) => {
 });
 
 exports.api = onRequest(app);
+
+exports.bqSync = onSchedule("every 30 minutes", async () => {
+  try {
+    const result = await syncPendingShipments();
+    logger.info("BigQuery sync complete", result);
+  } catch (error) {
+    logger.error("BigQuery scheduled sync failed", error);
+  }
+});
