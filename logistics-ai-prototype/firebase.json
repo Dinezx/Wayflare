@@ -13,20 +13,5 @@
       { "source": "/api/**", "function": "api" },
       { "source": "**", "destination": "/index.html" }
     ]
-  },
-  "emulators": {
-    "functions": {
-      "port": 5002
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "auth": {
-      "port": 9099
-    },
-    "ui": {
-      "enabled": true,
-      "port": 4001
-    }
   }
 }
