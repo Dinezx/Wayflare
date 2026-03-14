@@ -57,7 +57,7 @@ bq mk --table logistics_ai.shipments \
 6) Vertex AI endpoint
 - Deploy a prediction endpoint that accepts instances with fields:
   distance, traffic_level, weather_condition
-- Copy the endpoint REST URL and place it in functions/.env
+- Copy the endpoint REST URL and place it in functions/.env, or set project/location/endpoint ID.
 
 7) Google Maps Platform
 - Enable Maps JavaScript API and Geocoding API
@@ -79,8 +79,12 @@ VITE_FUNCTIONS_BASE_URL=/api
 Functions (functions/.env)
 ```
 VERTEX_AI_ENDPOINT=https://us-central1-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/REGION/endpoints/ENDPOINT_ID:predict
+VERTEX_AI_PROJECT=your_project_id
+VERTEX_AI_LOCATION=us-central1
+VERTEX_AI_ENDPOINT_ID=your_endpoint_id
 BQ_DATASET=logistics_ai
 BQ_TABLE=shipments
+BQ_SYNC_LIMIT=50
 ```
 
 ## Run Locally
@@ -111,4 +115,6 @@ firebase deploy
 ## Notes
 - If Vertex AI is not configured, the API falls back to a heuristic delay risk model.
 - Map rendering requires valid coordinates. The form supports optional latitude/longitude fields.
+- BigQuery sync runs every 30 minutes via `bqSync` and marks Firestore docs with `bq_exported: true`.
+- You can trigger a manual sync with `POST /api/analytics/sync`.
 

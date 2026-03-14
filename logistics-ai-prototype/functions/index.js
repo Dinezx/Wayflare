@@ -53,8 +53,21 @@ const heuristicRisk = (distance, traffic, weather) => {
   return clamp(base + distanceFactor + trafficFactor + weatherFactor, 0, 1);
 };
 
+const getVertexEndpoint = () => {
+  if (process.env.VERTEX_AI_ENDPOINT) {
+    return process.env.VERTEX_AI_ENDPOINT;
+  }
+  const project = process.env.VERTEX_AI_PROJECT;
+  const location = process.env.VERTEX_AI_LOCATION;
+  const endpointId = process.env.VERTEX_AI_ENDPOINT_ID;
+  if (!project || !location || !endpointId) {
+    return null;
+  }
+  return `https://${location}-aiplatform.googleapis.com/v1/projects/${project}/locations/${location}/endpoints/${endpointId}:predict`;
+};
+
 const callVertexAI = async (distance, traffic, weather) => {
-  const endpoint = process.env.VERTEX_AI_ENDPOINT;
+  const endpoint = getVertexEndpoint();
   if (!endpoint) {
     return null;
   }

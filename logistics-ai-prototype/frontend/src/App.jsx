@@ -43,6 +43,13 @@ export default function App() {
     distribution: { labels: [], values: [] },
     metrics: { average_delivery_time: 0, delay_frequency: 0 }
   });
+  const [vertexTest, setVertexTest] = React.useState({
+    distance: 120,
+    traffic_level: "high",
+    weather_condition: "rain"
+  });
+  const [vertexResult, setVertexResult] = React.useState(null);
+  const [vertexLoading, setVertexLoading] = React.useState(false);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (nextUser) => {
@@ -128,6 +135,28 @@ export default function App() {
       return;
     }
     await deleteDoc(doc(db, "shipments", shipmentId));
+  };
+
+  const handleVertexTest = async () => {
+    setVertexLoading(true);
+    setVertexResult(null);
+    try {
+      const response = await fetch(`${functionsBaseUrl}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          distance: Number(vertexTest.distance),
+          traffic_level: vertexTest.traffic_level,
+          weather_condition: vertexTest.weather_condition
+        })
+      });
+      const data = await response.json();
+      setVertexResult(data);
+    } catch (error) {
+      setVertexResult({ error: "Prediction failed" });
+    } finally {
+      setVertexLoading(false);
+    }
   };
 
   const normalizedQuery = searchTerm.trim().toLowerCase();
@@ -401,6 +430,62 @@ export default function App() {
                           ? Math.round(analytics.metrics.delay_frequency * 100)
                           : 0}%
                       </p>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-lg font-semibold text-slate-900">Vertex AI Test</h2>
+                      <button
+                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:bg-blue-300"
+                        onClick={handleVertexTest}
+                        disabled={vertexLoading}
+                      >
+                        {vertexLoading ? "Running..." : "Run Prediction"}
+                      </button>
+                    </div>
+                    <div className="mt-4 grid gap-4 md:grid-cols-3">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500">Distance (km)</label>
+                        <input
+                          className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                          type="number"
+                          value={vertexTest.distance}
+                          onChange={(event) =>
+                            setVertexTest((prev) => ({ ...prev, distance: event.target.value }))
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500">Traffic</label>
+                        <select
+                          className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                          value={vertexTest.traffic_level}
+                          onChange={(event) =>
+                            setVertexTest((prev) => ({ ...prev, traffic_level: event.target.value }))
+                          }
+                        >
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500">Weather</label>
+                        <select
+                          className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                          value={vertexTest.weather_condition}
+                          onChange={(event) =>
+                            setVertexTest((prev) => ({ ...prev, weather_condition: event.target.value }))
+                          }
+                        >
+                          <option value="clear">Clear</option>
+                          <option value="rain">Rain</option>
+                          <option value="storm">Storm</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs text-slate-600">
+                      {vertexResult ? JSON.stringify(vertexResult, null, 2) : "Run a prediction to see the response."}
                     </div>
                   </div>
                   <div className="grid gap-6 xl:grid-cols-2">

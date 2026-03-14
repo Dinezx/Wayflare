@@ -7,6 +7,15 @@ export default function Dashboard({ shipments }) {
   const onTimeRate = totalShipments
     ? Math.round(((totalShipments - highRisk) / totalShipments) * 1000) / 10
     : 0;
+  const riskBadge = (risk) => {
+    if (risk > 0.6) {
+      return "bg-red-50 text-red-600 border-red-100";
+    }
+    if (risk > 0.3) {
+      return "bg-yellow-50 text-yellow-700 border-yellow-100";
+    }
+    return "bg-green-50 text-green-600 border-green-100";
+  };
 
   return (
     <div className="space-y-6">
@@ -66,7 +75,7 @@ export default function Dashboard({ shipments }) {
           <div className="mt-4 space-y-3">
             {highRiskList.length === 0 && (
               <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
-                No high-risk shipments yet.
+                No high-risk shipments yet. Monitoring routes in real time.
               </div>
             )}
             {highRiskList.slice(0, 3).map((item) => (
@@ -95,12 +104,19 @@ export default function Dashboard({ shipments }) {
         <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-900">Active Shipments</h2>
           <div className="mt-4 space-y-3">
+            {shipments.length === 0 && (
+              <div className="rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+                Shipments will appear here once created.
+              </div>
+            )}
             {shipments.slice(0, 4).map((item) => (
               <div key={item.id} className="rounded-xl border border-slate-100 px-4 py-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-blue-600">{item.shipment_id}</span>
-                  <span className="text-xs font-semibold text-slate-500">
-                    {Math.round((item.delay_risk || 0) * 100)}%
+                  <span
+                    className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${riskBadge(item.delay_risk || 0)}`}
+                  >
+                    {Math.round((item.delay_risk || 0) * 100)}% risk
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-slate-700">
@@ -147,12 +163,21 @@ export default function Dashboard({ shipments }) {
                     Traffic: {item.traffic_level} | Weather: {item.weather_condition}
                   </td>
                   <td className="px-3 py-3 text-sm font-semibold text-slate-700">
-                    {Math.round((item.delay_risk || 0) * 100)}%
+                    <span
+                      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${riskBadge(item.delay_risk || 0)}`}
+                    >
+                      {Math.round((item.delay_risk || 0) * 100)}% risk
+                    </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          {shipments.length === 0 && (
+            <p className="px-3 py-6 text-center text-sm text-slate-500">
+              No shipments yet. Create your first shipment to populate the table.
+            </p>
+          )}
         </div>
       </div>
     </div>
