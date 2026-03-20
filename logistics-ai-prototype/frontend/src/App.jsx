@@ -180,7 +180,7 @@ export default function App() {
       <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white px-4 py-6 lg:flex">
         <div className="flex items-center gap-2 px-2 pb-6">
           <span className="material-symbols-rounded text-blue-600">local_shipping</span>
-          <span className="text-lg font-semibold text-slate-900">LogisAI</span>
+          <span className="text-lg font-semibold text-slate-900">Wayflare</span>
         </div>
         <nav className="space-y-2">
           {navItems.map((item) => (
