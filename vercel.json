@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "logistics-ai-prototype/frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
+  "installCommand": "cd logistics-ai-prototype/frontend && npm install",
+  "buildCommand": "cd logistics-ai-prototype/frontend && node ./node_modules/vite/bin/vite.js build",
+  "outputDirectory": "logistics-ai-prototype/frontend/dist",
   "routes": [
     {
       "handle": "filesystem"
