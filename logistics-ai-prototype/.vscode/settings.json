@@ -1,0 +1,16 @@
+{
+  "cSpell.words": [
+    "Firestore",
+    "Wayflare",
+    "creds",
+    "firebaseapp",
+    "firebasestorage",
+    "firestore",
+    "wayflare",
+    "VITE"
+  ],
+  "cSpell.ignorePaths": [
+    "**/.env",
+    "**/firebase.json"
+  ]
+}
